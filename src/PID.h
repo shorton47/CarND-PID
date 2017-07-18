@@ -1,6 +1,8 @@
 #ifndef PID_H
 #define PID_H
 
+#include <uWS/uWS.h>
+
 class PID {
 public:
   /*
@@ -17,6 +19,13 @@ public:
   double Ki;
   double Kd;
 
+    // SWH Added
+    double KpNew;
+    double KiNew;
+    double KdNew;
+  
+    
+    
   /*
   * Constructor
   */
@@ -41,6 +50,15 @@ public:
   * Calculate the total PID error.
   */
   double TotalError();
+    
+    
+    
+    double TotalErrorEstimate();
+    
+    void FindOptimalPIDParams();
+    
+    void Restart(uWS::WebSocket<uWS::SERVER> ws);
+    
 };
 
 #endif /* PID_H */
