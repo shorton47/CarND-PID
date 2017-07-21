@@ -75,7 +75,7 @@ int main() {
     training_mode = false;       // To calc optimal PID params. If false, just runs PID loop w/ current saved values
     train_max_iterations = 20;            // Maximum training runs
     train_max_steps_per_iteration = 200;  // Maximum training steps per run
-    double throttle = 0.5;  // .5 ~= 50 mph (throttle currently fixed
+    double throttle = 0.4;  // .5 ~= 50 mph (throttle currently fixed
 
     
     // Start
