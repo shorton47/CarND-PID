@@ -1,39 +1,102 @@
-# CarND-Controls-PID
-Self-Driving Car Engineer Nanodegree Program
+# CarND-ExtendedKalmanFilter Project
+
+
+This is a program that operates a non-linear Extended Kalman Filter (EKF) fusing both RADAR and LASER (Lidar) data together to get an optimal estimate using the CTRV model of to obtain estimate of a vehicle (or pedestrian) location. This program works in conjunction with Udacity's Simulator which it communicates over WebSocket. The simulator also contains ground truth data so an RMSE can be calculated and displayed to check accuracy. I obtains between 5-10cm accuracy for px,py on over both datasets.
+
+[//]: # (Image References)
+
+[image1]: ./UKFSuccessDataset1.png "Result"
+[image2]: ./UKFSuccessDataset2.png "Result"
+
+[image3]: ./UKFBug1.png "Result"
+[image4]: ./UKFBug2.png "Result"
+
+
+After the UKF was working, I obtained the following results for both datasets:
+
+| Figure 8 Data (+x/+y start)            | Figure 8 Data (-x/+y start)     | 
+| :---:                                  |:---:                            |
+| ![alt text][image1]                    |  ![alt text][image2]            |
+
+
+
+It is worth noting that all parts of the Kalman Filter must be working robustly in order to get accurate results. Earlier in the development, I had a couple of bugs including not generating the sigma points properly, inserting the incoming sensor measurements (z) in the wrong place, and not re-initializing the augmented state vectors. In these cases, the state estimates can do some wacky things like:
+
+
+
+| Bug1 in UKF                            | Bug2 in UKF                     | 
+| :---:                                  |:---:                            |
+| ![alt text][image3]                    |  ![alt text][image4]            |
+
+
+
+It was very helpful that we had ground truth data to compare answers to in order to root out all the bugs and get a strong result.
 
 ---
 
-## Dependencies
+## Environment to Compile Project
+This was developed on a Macbook Pro with the following configuration:
+* macOS Sierra 10.11
+* Xcode 8.2.1
+* Using uWebsockets for com w/ Udacity Simulator
+* which in turn needs Openssl 1.0.2
 
-* cmake >= 3.5
- * All OSes: [click here for installation instructions](https://cmake.org/install/)
-* make >= 4.1
-  * Linux: make is installed by default on most Linux distros
-  * Mac: [install Xcode command line tools to get make](https://developer.apple.com/xcode/features/)
-  * Windows: [Click here for installation instructions](http://gnuwin32.sourceforge.net/packages/make.htm)
-* gcc/g++ >= 5.4
-  * Linux: gcc / g++ is installed by default on most Linux distros
-  * Mac: same deal as make - [install Xcode command line tools]((https://developer.apple.com/xcode/features/)
-  * Windows: recommend using [MinGW](http://www.mingw.org/)
-* [uWebSockets](https://github.com/uWebSockets/uWebSockets)
-  * Run either `./install-mac.sh` or `./install-ubuntu.sh`.
-  * If you install from source, checkout to commit `e94b6e1`, i.e.
-    ```
-    git clone https://github.com/uWebSockets/uWebSockets 
-    cd uWebSockets
-    git checkout e94b6e1
-    ```
-    Some function signatures have changed in v0.14.x. See [this PR](https://github.com/udacity/CarND-MPC-Project/pull/3) for more details.
-* Simulator. You can download these from the [project intro page](https://github.com/udacity/self-driving-car-sim/releases) in the classroom.
+*There is also a major dependency with the open source C++ library EIGEN which has the vector and Matrix data structues as well as all the overloaded operators for Matrix algebra for the Kalman Filter equations.
 
-There's an experimental patch for windows in this [PR](https://github.com/udacity/CarND-PID-Control-Project/pull/3)
+
+---
+
+## Udacity Notes on this Project
+
+This project involves the Term 2 Simulator which can be downloaded [here](https://github.com/udacity/self-driving-car-sim/releases)
+
+This repository includes two files that can be used to set up and intall [uWebSocketIO](https://github.com/uWebSockets/uWebSockets) for either Linux or Mac systems. For windows you can use either Docker, VMware, or even [Windows 10 Bash on Ubuntu](https://www.howtogeek.com/249966/how-to-install-and-use-the-linux-bash-shell-on-windows-10/) to install uWebSocketIO. 
+
+Once the install for uWebSocketIO is complete, the main program can be built and ran by doing the following from the project top directory.
+
+1. mkdir build
+2. cd build
+3. cmake ..
+4. make
+5. ./UnscentedKF
+
+Note that the programs that need to be written to accomplish the project are src/ukf.cpp, src/ukf.h, tools.cpp, and tools.h
+
+The program main.cpp has already been filled out, but feel free to modify it.
+
+Here is the main protcol that main.cpp uses for uWebSocketIO in communicating with the simulator.
+
+
+INPUT: values provided by the simulator to the c++ program
+
+["sensor_measurement"] => the measurment that the simulator observed (either lidar or radar)
+
+
+OUTPUT: values provided by the c++ program to the simulator
+
+["estimate_x"] <= kalman filter estimated position x
+["estimate_y"] <= kalman filter estimated position y
+["rmse_x"]
+["rmse_y"]
+["rmse_vx"]
+["rmse_vy"]
+
+---
+
+## Other Important Dependencies
+
+* cmake >= v3.5
+* make >= v4.1
+* gcc/g++ >= v5.4
 
 ## Basic Build Instructions
 
 1. Clone this repo.
 2. Make a build directory: `mkdir build && cd build`
 3. Compile: `cmake .. && make`
-4. Run it: `./pid`. 
+4. Run it: `./UnscentedKF path/to/input.txt path/to/output.txt`. You can find
+   some sample inputs in 'data/'.
+    - eg. `./UnscentedKF ../data/obj_pose-laser-radar-synthetic-input.txt`
 
 ## Editor Settings
 
@@ -46,47 +109,18 @@ using the following settings:
 
 ## Code Style
 
-Please (do your best to) stick to [Google's C++ style guide](https://google.github.io/styleguide/cppguide.html).
+Please stick to [Google's C++ style guide](https://google.github.io/styleguide/cppguide.html) as much as possible.
+
+## Generating Additional Data
+
+This is optional!
+
+If you'd like to generate your own radar and lidar data, see the
+[utilities repo](https://github.com/udacity/CarND-Mercedes-SF-Utilities) for
+Matlab scripts that can generate additional data.
 
 ## Project Instructions and Rubric
 
-Note: regardless of the changes you make, your project must be buildable using
-cmake and make!
-
-More information is only accessible by people who are already enrolled in Term 2
-of CarND. If you are enrolled, see [the project page](https://classroom.udacity.com/nanodegrees/nd013/parts/40f38239-66b6-46ec-ae68-03afd8a601c8/modules/f1820894-8322-4bb3-81aa-b26b3c6dcbaf/lessons/e8235395-22dd-4b87-88e0-d108c5e5bbf4/concepts/6a4d8d42-6a04-4aa6-b284-1697c0fd6562)
+This information is only accessible by people who are already enrolled in Term 2
+of CarND. If you are enrolled, see [the project page](https://classroom.udacity.com/nanodegrees/nd013/parts/40f38239-66b6-46ec-ae68-03afd8a601c8/modules/0949fca6-b379-42af-a919-ee50aa304e6a/lessons/c3eb3583-17b2-4d83-abf7-d852ae1b9fff/concepts/f437b8b0-f2d8-43b0-9662-72ac4e4029c1)
 for instructions and the project rubric.
-
-## Hints!
-
-* You don't have to follow this directory structure, but if you do, your work
-  will span all of the .cpp files here. Keep an eye out for TODOs.
-
-## Call for IDE Profiles Pull Requests
-
-Help your fellow students!
-
-We decided to create Makefiles with cmake to keep this project as platform
-agnostic as possible. Similarly, we omitted IDE profiles in order to we ensure
-that students don't feel pressured to use one IDE or another.
-
-However! I'd love to help people get up and running with their IDEs of choice.
-If you've created a profile for an IDE that you think other students would
-appreciate, we'd love to have you add the requisite profile files and
-instructions to ide_profiles/. For example if you wanted to add a VS Code
-profile, you'd add:
-
-* /ide_profiles/vscode/.vscode
-* /ide_profiles/vscode/README.md
-
-The README should explain what the profile does, how to take advantage of it,
-and how to install it.
-
-Frankly, I've never been involved in a project with multiple IDE profiles
-before. I believe the best way to handle this would be to keep them out of the
-repo root to avoid clutter. My expectation is that most profiles will include
-instructions to copy files to a new location to get picked up by the IDE, but
-that's just a guess.
-
-One last note here: regardless of the IDE used, every submitted project must
-still be compilable with cmake and make./

@@ -3,6 +3,8 @@
 
 #include <uWS/uWS.h>
 
+using namespace std;
+
 class PID {
 public:
   /*
@@ -11,6 +13,7 @@ public:
   double p_error;
   double i_error;
   double d_error;
+  double sumsq_error;
 
   /*
   * Coefficients
@@ -44,20 +47,30 @@ public:
   /*
   * Update the PID error variables given cross track error.
   */
-  void UpdateError(double cte);
+  void UpdateErrors(double cte);
 
   /*
   * Calculate the total PID error.
   */
-  double TotalError();
+  double UpdateControl();
     
     
     
-    double TotalErrorEstimate();
+    double TotalErrorTraining(vector<double> p);
+    
+    double AccumulatedRMSEError(long n);
     
     void FindOptimalPIDParams();
     
     void Restart(uWS::WebSocket<uWS::SERVER> ws);
+    
+    void TwiddlePIDParams(long iter, long step);
+
+    string PrintPIDParams();
+    
+    void UpdatePIDParams(double Kp_cur, double Ki_cur, double Kd_cur);
+
+
     
 };
 
