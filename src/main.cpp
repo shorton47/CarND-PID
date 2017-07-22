@@ -69,13 +69,13 @@ int main() {
     // are the tuned PID values.
     //---
     double static P_def_gain = 0.15;    // 0.15   .15    0.1     0.1
-    double static I_def_gain = 0.0004;  // 0.0004 .0001  0.0004  0.0001
+    double static I_def_gain = 0.0005;  // 0.0004 .0001  0.0004  0.0001
     double static D_def_gain = 4.0;     // 4.0   4.0     2.0     2.0
     
     training_mode = false;       // To calc optimal PID params. If false, just runs PID loop w/ current saved values
     train_max_iterations = 20;            // Maximum training runs
     train_max_steps_per_iteration = 200;  // Maximum training steps per run
-    double throttle = 0.4;  // .5 ~= 50 mph (throttle currently fixed
+    double throttle = 0.3;  // .5 ~= 50 mph (throttle currently fixed)
 
     
     // Start
@@ -140,7 +140,7 @@ int main() {
                     } // if-else train/regular
                     
                     // Pick-up w/ Udacity code
-                    cout << "I=" << iter << " Step=" << step << " Speed=" << speed << " Angle=" << angle \
+                    //cout << "I=" << iter << " Step=" << step << " Speed=" << speed << " Angle=" << angle \
                                  << " CTE="  << cte  << " Adjust=" << steer_value << endl;
                     
                     // Construct message to simulator
