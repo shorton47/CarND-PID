@@ -140,7 +140,7 @@ int main() {
                     } // if-else train/regular
                     
                     // Pick-up w/ Udacity code
-                    //cout << "I=" << iter << " Step=" << step << " Speed=" << speed << " Angle=" << angle \
+                    cout << "I=" << iter << " Step=" << step << " Speed=" << speed << " Angle=" << angle \
                                  << " CTE="  << cte  << " Adjust=" << steer_value << endl;
                     
                     // Construct message to simulator
